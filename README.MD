@@ -3,6 +3,12 @@
 ## Descripción
 Esta es una API RESTful desarrollada para la prueba tecnica de TSGroup.
 
+## Requisitos
+
+Java 21
+Maven
+Docker-compose
+
 ## Uso
 1. La base de datos corre en un contenedor de docker. Iniciar con el comando docker-compose up -d
 2. Compilar aplicacion en Spring Boot con ./mvnw spring-boot:run
@@ -32,4 +38,4 @@ Esta es una API RESTful desarrollada para la prueba tecnica de TSGroup.
 
 ### Coleccion Postman
 
-En el raiz del proyecto, esta la coleccion Postman exportada. Importarla en Postman para realizar las pruebas correspondientes.
+En el raiz del proyecto, esta la coleccion Postman en formato JSON. Importarla en Postman para realizar las pruebas correspondientes.
