@@ -1,10 +1,18 @@
 package com.exercise.api_rest.tsg.Services;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.exercise.api_rest.tsg.Dto.CreatePostDTO;
+import com.exercise.api_rest.tsg.Dto.UpdatePostDTO;
 import com.exercise.api_rest.tsg.Models.Post;
+import com.exercise.api_rest.tsg.Models.User;
 import com.exercise.api_rest.tsg.Repository.PostRepository;
+import com.exercise.api_rest.tsg.Repository.UserRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PostService {
@@ -12,32 +20,45 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
-    public List<Post> getAllPosts() {
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Post> findAll() {
         return postRepository.findAll();
     }
 
-    public Post getPostById(Integer id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        return post;
+    public Post findById(Integer id) {
+        return postRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
     }
 
-    public List<Post> getPostsByUserId(Integer userId) {
-        return postRepository.findByUserId(userId);
-    }
+    public Post create(CreatePostDTO createPostDTO) {
+        User user = userRepository.findById(createPostDTO.getUserId())
+            .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + createPostDTO.getUserId()));
 
-    public Post createPost(Post post) {
+        Post post = new Post();
+        post.setTitle(createPostDTO.getTitle());
+        post.setContent(createPostDTO.getContent());
+        post.setUser(user);
+        post.setPublicationDate(LocalDateTime.now());
+
         return postRepository.save(post);
     }
 
-    public Post updatePost(Integer id, Post newData) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setTitle(newData.getTitle());
-        post.setContent(newData.getContent());
+    public Post update(Integer id, UpdatePostDTO updatePostDTO) {
+        Post post = findById(id);
+        post.setTitle(updatePostDTO.getTitle() != null ? updatePostDTO.getTitle() : post.getTitle());
+        post.setContent(updatePostDTO.getContent() != null ? updatePostDTO.getContent() : post.getContent());
+        
         return postRepository.save(post);
     }
 
-    public void deletePost(Integer id) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+    public void delete(Integer id) {
+        Post post = findById(id);
         postRepository.delete(post);
+    }
+
+    public List<Post> findByUser(Integer userId) {
+        return postRepository.findByUserId(userId);
     }
 }

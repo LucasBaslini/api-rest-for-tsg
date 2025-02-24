@@ -3,6 +3,9 @@ package com.exercise.api_rest.tsg.Models;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "posts")
 public class Post {
@@ -11,24 +14,30 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+     
+    @Column(name = "title")
+    private String title;
 
+    @Column(name = "content")
+    private String content;
+
+    @Column(name = "publication_date")
+    private LocalDateTime publicationDate;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
-
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "publication_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime publicationDate;
+    @JsonProperty("posted_by_user")
+    public Integer idFromUser() {
+        return user.getId();
+    }
 
     // Getters y Setters
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -58,5 +67,8 @@ public class Post {
 
     public LocalDateTime getPublicationDate() {
         return publicationDate;
+    }
+    public void setPublicationDate(LocalDateTime publicationDate) {
+        this.publicationDate = publicationDate;
     }
 }
