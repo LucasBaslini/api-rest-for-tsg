@@ -1,0 +1,6 @@
+com/exercise/api_rest/tsg/Config/SecurityConfig.class
+com/exercise/api_rest/tsg/Repository/UserRepository.class
+com/exercise/api_rest/tsg/Services/JwtService.class
+com/exercise/api_rest/tsg/Application.class
+com/exercise/api_rest/tsg/Services/UserService.class
+com/exercise/api_rest/tsg/Controllers/UserController.class
